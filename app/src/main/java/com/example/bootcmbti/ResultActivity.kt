@@ -3,18 +3,20 @@ package com.example.bootcmbti
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
+import com.example.bootcmbti.databinding.ActivityMainBinding
+import com.example.bootcmbti.databinding.ActivityResultBinding
 import java.util.Locale
 
 class ResultActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityResultBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_result)
+        binding = ActivityResultBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val results = intent.getIntegerArrayListExtra("results") ?: arrayListOf()
-
         // 선택된 값에 따른 결과 알파벳 할당
         val resultTypes = listOf(
             listOf("E", "I"),
@@ -30,16 +32,13 @@ class ResultActivity : AppCompatActivity() {
         }
 
         // 결과 TextView 업데이트
-        val tvResValue: TextView = findViewById(R.id.tv_resValue)
-        tvResValue.text = resultString
+        binding.tvResValue.text = resultString
 
         // 알파벳 결과에 따른 이미지 설정
-        val ivResImg: ImageView = findViewById(R.id.iv_resImg)
-        val imageResource = resources.getIdentifier("ic_${resultString.toLowerCase(Locale.ROOT)}", "drawable", packageName)
-        ivResImg.setImageResource(imageResource)
 
-        val btnRetry: Button = findViewById(R.id.btn_res_retry)
-        btnRetry.setOnClickListener {
+        val imageResource = resources.getIdentifier("ic_${resultString.lowercase(Locale.ROOT)}", "drawable", packageName)
+        binding.ivResImg.setImageResource(imageResource)
+        binding.btnResRetry.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)

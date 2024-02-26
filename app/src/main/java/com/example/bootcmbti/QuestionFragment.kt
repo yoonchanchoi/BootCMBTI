@@ -10,8 +10,13 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
+import com.example.bootcmbti.databinding.ActivityMainBinding
+import com.example.bootcmbti.databinding.FragmentQuestionBinding
 
 class QuestionFragment : Fragment() {
+
+    private lateinit var binding: FragmentQuestionBinding
+
     private var questionType: Int = 0
 
     private val questionTitles = listOf(
@@ -60,46 +65,44 @@ class QuestionFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_question, container, false)
+        binding = FragmentQuestionBinding.inflate(inflater, container, false)
 
-        val title: TextView = view.findViewById(R.id.tv_question_title)
-        title.text = getString(questionTitles[questionType])
+        binding.tvQuestionTitle.text = getString(questionTitles[questionType])
 
         val questionTextViews = listOf<TextView>(
-            view.findViewById(R.id.tv_question_1),
-            view.findViewById(R.id.tv_question_2),
-            view.findViewById(R.id.tv_question_3)
+            binding.tvQuestion1,
+            binding.tvQuestion2,
+            binding.tvQuestion3
         )
 
         val answerRadioGroups = listOf<RadioGroup>(
-            view.findViewById(R.id.rg_answer_1),
-            view.findViewById(R.id.rg_answer_2),
-            view.findViewById(R.id.rg_answer_3)
-        )
+            binding.rgAnswer1,
+            binding.rgAnswer2,
+            binding.rgAnswer3,
+
+            )
 
         for (i in questionTextViews.indices) {
             questionTextViews[i].text = getString(questionTexts[questionType][i])
-
             val radioButton1 = answerRadioGroups[i].getChildAt(0) as RadioButton
             val radioButton2 = answerRadioGroups[i].getChildAt(1) as RadioButton
             radioButton1.text = getString(questionAnswers[questionType][i][0])
             radioButton2.text = getString(questionAnswers[questionType][i][1])
         }
 
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val answerRadioGroups = listOf<RadioGroup>(
-            view.findViewById(R.id.rg_answer_1),
-            view.findViewById(R.id.rg_answer_2),
-            view.findViewById(R.id.rg_answer_3)
+        val answerRadioGroups = listOf(
+            binding.rgAnswer1,
+            binding.rgAnswer2,
+            binding.rgAnswer3
         )
 
-        val btnNext: Button = view.findViewById(R.id.btn_next)
-        btnNext.setOnClickListener {
+        binding.btnNext.setOnClickListener {
 
             //모든 질문에 대한 응답이 완료되었는지 확인
             val isAllAnswered = answerRadioGroups.all { it.checkedRadioButtonId != -1 }
@@ -118,7 +121,7 @@ class QuestionFragment : Fragment() {
         }
 
         if(questionType==3){
-            btnNext.setText("결과 확인")
+            binding.btnNext.text = "결과 확인"
         }
     }
 
